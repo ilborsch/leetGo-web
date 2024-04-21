@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/ilborsch/leetGo-web/internal/config"
 	handlers "github.com/ilborsch/leetGo-web/internal/handlers/index"
 )
 
 func main() {
 	// init config
+	cfg := config.MustLoad()
+	fmt.Println(*cfg)
 
 	// init logger
 
