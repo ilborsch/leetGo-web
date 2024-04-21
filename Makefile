@@ -1,3 +1,3 @@
 run:
-	go run ./cmd/webapp/main.go
+	go run ./cmd/webapp/main.go --config=./config/local.yaml
 

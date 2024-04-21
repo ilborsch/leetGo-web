@@ -35,9 +35,9 @@ func MustLoadByPath(path string) *Config {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		panic(fmt.Sprintf("the file with path %s does not exist", path))
 	}
-	var config *Config
-	if err := cleanenv.ReadConfig(path, config); err != nil {
+	var config Config
+	if err := cleanenv.ReadConfig(path, &config); err != nil {
 		panic("error parsing config file")
 	}
-	return config
+	return &config
 }
