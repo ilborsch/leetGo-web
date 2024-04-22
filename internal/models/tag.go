@@ -12,12 +12,17 @@ type Tag struct {
 	Problems []Problem `storage:"many2many:problem_tags;"`
 }
 
+// TagRaw used to initialize tag object which will be later used for create/update operations
+func TagRaw(name string) Tag {
+	return Tag{Name: name}
+}
+
 type TagProvider interface {
 	Tag(ctx context.Context, name string) (Tag, error)
 }
 
 type TagSaver interface {
-	SaveTag(ctx context.Context, name string) (uint, error)
+	SaveTag(ctx context.Context, new Tag) (uint, error)
 }
 
 type TagRemover interface {

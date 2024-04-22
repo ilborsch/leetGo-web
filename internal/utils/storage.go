@@ -9,3 +9,11 @@ func GetTagNames(tags []models.Tag) []string {
 	}
 	return tagNames
 }
+
+func GetTagIDs(tags []models.Tag) []uint {
+	tagNames := make([]uint, 0, len(tags))
+	for _, tag := range tags {
+		tagNames = append(tagNames, tag.ID)
+	}
+	return tagNames
+}

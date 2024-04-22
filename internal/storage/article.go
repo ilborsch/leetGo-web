@@ -2,14 +2,20 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"github.com/ilborsch/leetGo-web/internal/models"
 	"github.com/ilborsch/leetGo-web/internal/utils"
+	"gorm.io/gorm"
 )
 
 func (s *Storage) Article(ctx context.Context, id uint) (models.Article, error) {
 	var article models.Article
-	if res := s.db.First(&article, id); res.Error != nil {
-		return models.Article{}, res.Error
+	result := s.db.First(&article, id)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return models.Article{}, nil
+		}
+		return models.Article{}, result.Error
 	}
 	return article, nil
 }
@@ -18,6 +24,9 @@ func (s *Storage) ArticlesByAuthor(ctx context.Context, authorID uint) ([]models
 	var articles []models.Article
 	result := s.db.Where("author_id = ?", authorID).Find(&articles)
 	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, result.Error
 	}
 	return articles, nil
@@ -35,9 +44,20 @@ func (s *Storage) ArticlesByTags(ctx context.Context, tags []models.Tag) ([]mode
 		Find(&articles)
 
 	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, result.Error
 	}
 	return articles, nil
+}
+
+func (s *Storage) SaveArticle(ctx context.Context, new models.Article) (uint, error) {
+	result := s.db.Create(&new)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return new.ID, nil
 }
 
 func (s *Storage) UpdateArticle(ctx context.Context, id uint, new models.Article) error {

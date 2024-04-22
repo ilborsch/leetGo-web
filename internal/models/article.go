@@ -16,6 +16,22 @@ type Article struct {
 	Tags        []Tag `storage:"many2many:article_tags;"`
 }
 
+// ArticleRaw used to initialize article object which will be later used for create/update operations
+func ArticleRaw(title string, content []byte, authorID uint, isPublished bool, tags []Tag) Article {
+	publishDate := time.Time{}
+	if isPublished {
+		publishDate = time.Now()
+	}
+	return Article{
+		Title:       title,
+		Content:     content,
+		AuthorID:    authorID,
+		IsPublished: isPublished,
+		PublishDate: publishDate,
+		Tags:        tags,
+	}
+}
+
 type ArticleProvider interface {
 	Article(ctx context.Context, id uint) (Article, error)
 	ArticlesByAuthor(ctx context.Context, authorID uint) ([]Article, error)
@@ -23,15 +39,7 @@ type ArticleProvider interface {
 }
 
 type ArticleSaver interface {
-	SaveArticle(
-		ctx context.Context,
-		id uint,
-		title string,
-		content []byte,
-		authorID uint,
-		isPublished bool,
-		tags []Tag,
-	) (uint, error)
+	SaveArticle(ctx context.Context, new Article) (uint, error)
 }
 
 type ArticleUpdater interface {

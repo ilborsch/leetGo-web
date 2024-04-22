@@ -19,6 +19,16 @@ type Problem struct {
 	Tags        []Tag  `storage:"many2many:problem_tags;"`
 }
 
+// ProblemRaw used to initialize problem object which will be later used for create/update operations
+func ProblemRaw(title string, description []byte, difficulty string, tags []Tag) Problem {
+	return Problem{
+		Title:       title,
+		Description: description,
+		Difficulty:  difficulty,
+		Tags:        tags,
+	}
+}
+
 type ProblemProvider interface {
 	Problem(ctx context.Context, id uint) (Problem, error)
 	ProblemByTitle(ctx context.Context, title string) (Problem, error)
@@ -26,13 +36,7 @@ type ProblemProvider interface {
 }
 
 type ProblemSaver interface {
-	Save(
-		ctx context.Context,
-		title string,
-		description []byte,
-		difficulty string,
-		tags []Tag,
-	) (uint, error)
+	Save(ctx context.Context, new Problem) (uint, error)
 }
 
 type ProblemRemover interface {
