@@ -9,11 +9,11 @@ import (
 type Article struct {
 	gorm.Model
 	Title       string
-	Content     []byte `gorm:"type:blob"`
+	Content     []byte `storage:"type:blob"`
 	AuthorID    uint
 	IsPublished bool
 	PublishDate time.Time
-	Tags        []Tag `gorm:"many2many:article_tags;"`
+	Tags        []Tag `storage:"many2many:article_tags;"`
 }
 
 type ArticleProvider interface {

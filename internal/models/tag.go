@@ -7,9 +7,9 @@ import (
 
 type Tag struct {
 	gorm.Model
-	Name     string    `gorm:"not null;unique"`
-	Articles []Article `gorm:"many2many:article_tags;"`
-	Problems []Problem `gorm:"many2many:problem_tags;"`
+	Name     string    `storage:"not null;unique"`
+	Articles []Article `storage:"many2many:article_tags;"`
+	Problems []Problem `storage:"many2many:problem_tags;"`
 }
 
 type TagProvider interface {

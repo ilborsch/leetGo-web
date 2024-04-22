@@ -13,10 +13,10 @@ const (
 
 type Problem struct {
 	gorm.Model
-	Title       string `gorm:"not null;unique_index"`
-	Description []byte `gorm:"type:blob;not null"`
-	Difficulty  string `gorm:"type:varchar(100);not null"`
-	Tags        []Tag  `gorm:"many2many:problem_tags;"`
+	Title       string `storage:"not null;unique_index"`
+	Description []byte `storage:"type:blob;not null"`
+	Difficulty  string `storage:"type:varchar(100);not null"`
+	Tags        []Tag  `storage:"many2many:problem_tags;"`
 }
 
 type ProblemProvider interface {
