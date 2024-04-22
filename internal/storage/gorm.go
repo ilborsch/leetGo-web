@@ -22,7 +22,7 @@ func New() *Storage {
 func connectionMustLoad() *gorm.DB {
 	db, err := gorm.Open(sqlite.Open(fileName), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect to database")
+		panic("failed to connect to db")
 	}
 	runMigrations(db)
 	return db

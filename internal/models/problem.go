@@ -20,8 +20,8 @@ type Problem struct {
 }
 
 type ProblemProvider interface {
-	Problem(ctx context.Context, id uint) (*Problem, error)
-	ProblemByTitle(ctx context.Context, title string) (*Problem, error)
+	Problem(ctx context.Context, id uint) (Problem, error)
+	ProblemByTitle(ctx context.Context, title string) (Problem, error)
 	ProblemsByFilters(ctx context.Context, difficulty *string, tags []Tag) ([]Problem, error)
 }
 
@@ -35,10 +35,6 @@ type ProblemSaver interface {
 	) (uint, error)
 }
 
-type ProblemUpdater interface {
-	Update(ctx context.Context, id uint, new Problem) error
-}
-
 type ProblemRemover interface {
-	Remove(ctx context.Context, id uint) error
+	RemoveProblem(ctx context.Context, id uint) error
 }

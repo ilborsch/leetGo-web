@@ -13,7 +13,7 @@ type User struct {
 }
 
 type UserProvider interface {
-	User(ctx context.Context, uid uint) (*User, error)
+	User(ctx context.Context, uid uint) (User, error)
 }
 
 type UserAuthorizer interface {
