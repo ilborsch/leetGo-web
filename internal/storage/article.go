@@ -53,9 +53,8 @@ func (s *Storage) ArticlesByTags(ctx context.Context, tags []models.Tag) ([]mode
 }
 
 func (s *Storage) SaveArticle(ctx context.Context, new models.Article) (uint, error) {
-	result := s.db.Create(&new)
-	if result.Error != nil {
-		return 0, result.Error
+	if err := s.db.Create(&new).Error; err != nil {
+		return 0, err
 	}
 	return new.ID, nil
 }
@@ -75,9 +74,8 @@ func (s *Storage) UpdateArticle(ctx context.Context, id uint, new models.Article
 }
 
 func (s *Storage) RemoveArticle(ctx context.Context, id uint) error {
-	result := s.db.Delete(&models.Article{}, id)
-	if result.Error != nil {
-		return result.Error
+	if err := s.db.Delete(&models.Article{}, id).Error; err != nil {
+		return err
 	}
 	return nil
 }

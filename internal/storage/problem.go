@@ -55,17 +55,15 @@ func (s *Storage) ProblemsByFilters(ctx context.Context, difficulty *string, tag
 }
 
 func (s *Storage) Save(ctx context.Context, new models.Problem) (uint, error) {
-	result := s.db.Create(&new)
-	if result.Error != nil {
-		return 0, result.Error
+	if err := s.db.Create(&new).Error; err != nil {
+		return 0, err
 	}
 	return new.ID, nil
 }
 
 func (s *Storage) RemoveProblem(ctx context.Context, id uint) error {
-	result := s.db.Delete(&models.Article{}, id)
-	if result.Error != nil {
-		return result.Error
+	if err := s.db.Delete(&models.Article{}, id).Error; err != nil {
+		return err
 	}
 	return nil
 }

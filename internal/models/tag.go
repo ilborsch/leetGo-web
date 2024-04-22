@@ -18,7 +18,8 @@ func TagRaw(name string) Tag {
 }
 
 type TagProvider interface {
-	Tag(ctx context.Context, name string) (Tag, error)
+	Tag(ctx context.Context, id int) (Tag, error)
+	TagByName(ctx context.Context, name string) (Tag, error)
 }
 
 type TagSaver interface {
