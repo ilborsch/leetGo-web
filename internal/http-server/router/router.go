@@ -46,9 +46,12 @@ func setupRoutes(
 
 ) {
 	r.GET("/", handlers.Index)
-	r.GET("/article/:id", handlers.ArticleByID(log, articleProvider))
-	r.GET("/new_article/", handlers.NewArticleForm(log))
-	r.POST("/article/:id", handlers.CreateArticle(log, articleSaver, tagProvider))
+
+	articleGroup := r.Group("/article")
+	articleGroup.GET("/:id", handlers.ArticleByID(log, articleProvider))
+	articleGroup.GET("/new", handlers.NewArticleForm(log))
+	articleGroup.POST("/new", handlers.CreateArticle(log, articleSaver, tagProvider))
+
 }
 
 func setupMiddleware(r *gin.Engine, log *slog.Logger) {
