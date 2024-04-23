@@ -28,6 +28,7 @@ func New(log *slog.Logger, storage *storage.Storage) *Router {
 	engine.SetHTMLTemplate(template.Must(template.ParseFiles("static/html/*.html")))
 
 	setupMiddleware(engine, log)
+	// sorry about that :)
 	setupRoutes(engine, log, storage, storage, storage, storage, storage)
 	return &Router{
 		log:    log,
@@ -51,7 +52,6 @@ func setupRoutes(
 	articleGroup.GET("/:id", handlers.ArticleByID(log, articleProvider))
 	articleGroup.GET("/new", handlers.NewArticleForm(log))
 	articleGroup.POST("/new", handlers.CreateArticle(log, articleSaver, tagProvider))
-
 }
 
 func setupMiddleware(r *gin.Engine, log *slog.Logger) {
