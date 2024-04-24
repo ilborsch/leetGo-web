@@ -7,18 +7,29 @@ import (
 )
 
 const (
-	GetArticleHTMLTemplateName     = "article.html"
-	ArticleSuccessHTMLTemplateName = "article_success.html"
+	GetArticleTemplateName     = "article.html"
+	CreateArticleTemplateName  = "create_article.html"
+	NewArticleFormTemplateName = "new_article_form.html"
+	UpdateArticleTemplateName  = "update_article.html"
+	RemoveArticleTemplateName  = "remove_article.html"
 )
 
 func ArticleResponse(c *gin.Context, article models.Article) {
-	c.HTML(http.StatusOK, GetArticleHTMLTemplateName, article)
+	c.HTML(http.StatusOK, GetArticleTemplateName, article)
 }
 
-func ArticleSuccessResponse(c *gin.Context, article models.Article) {
-	c.HTML(http.StatusOK, ArticleSuccessHTMLTemplateName, article)
+func CreateArticleResponse(c *gin.Context, article models.Article) {
+	c.HTML(http.StatusOK, CreateArticleTemplateName, article)
 }
 
-func RespondWithNewArticleForm(c *gin.Context) {
+func NewArticleFormResponse(c *gin.Context) {
+	c.HTML(http.StatusOK, NewArticleFormTemplateName, gin.H{})
+}
 
+func UpdateArticleResponse(c *gin.Context, article models.Article) {
+	c.HTML(http.StatusOK, UpdateArticleTemplateName, article)
+}
+
+func RemoveArticleResponse(c *gin.Context) {
+	c.HTML(http.StatusOK, RemoveArticleTemplateName, gin.H{})
 }

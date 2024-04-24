@@ -20,6 +20,7 @@ func ArticleByID(
 		if err != nil {
 			log.Info("non-parsable article id provided: " + c.Param("id"))
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
 		}
 
 		log = log.With(slog.Int("id", id))
@@ -27,10 +28,12 @@ func ArticleByID(
 		if err != nil {
 			log.Error("error retrieving the article from db")
 			templates.RespondWithError(c, http.StatusInternalServerError, "Internal server error. Sorry.")
+			return
 		}
 		if article.ID == 0 {
 			log.Info("invalid article id provided")
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
 		}
 		templates.ArticleResponse(c, article)
 	}
@@ -54,6 +57,7 @@ func CreateArticle(
 		if err != nil {
 			log.Info("invalid request form")
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
+			return
 		}
 
 		article := models.ArticleRaw(title, content, authorID, isPublished, tags)
@@ -61,16 +65,17 @@ func CreateArticle(
 		if err != nil {
 			log.Info("invalid request form")
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
+			return
 		}
 
 		log.Info(fmt.Sprintf("created a new article with id %v", id))
-		templates.ArticleSuccessResponse(c, article)
+		templates.CreateArticleResponse(c, article)
 	}
 }
 
 func NewArticleForm(log *slog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		templates.RespondWithNewArticleForm(c)
+		templates.NewArticleFormResponse(c)
 	}
 }
 
@@ -86,6 +91,7 @@ func UpdateArticle(
 		if err != nil {
 			log.Info("non-parsable article id provided: " + c.Param("id"))
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
 		}
 		authorID := uint(1)
 		title := c.PostForm("title")
@@ -97,6 +103,7 @@ func UpdateArticle(
 		if err != nil {
 			log.Info("invalid request form")
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
+			return
 		}
 
 		article := models.ArticleRaw(title, content, authorID, isPublished, tags)
@@ -104,9 +111,32 @@ func UpdateArticle(
 		if err != nil {
 			log.Info("invalid request form")
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
+			return
 		}
 
 		log.Info(fmt.Sprintf("updated article with id %v successfully", id))
-		templates.ArticleSuccessResponse(c, article)
+		templates.UpdateArticleResponse(c, article)
+	}
+}
+
+func RemoveArticle(
+	log *slog.Logger,
+	articleRemover models.ArticleRemover,
+) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			log.Info("non-parsable article id provided: " + c.Param("id"))
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
+		}
+		if err = articleRemover.RemoveArticle(c, uint(id)); err != nil {
+			log.Info(fmt.Sprintf("invalid id provided: %v", id))
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
+		}
+
+		log.Info(fmt.Sprintf("removed article with id %v successfully", id))
+		templates.RemoveArticleResponse(c)
 	}
 }

@@ -52,6 +52,11 @@ func setupRoutes(
 	articleGroup.GET("/:id", handlers.ArticleByID(log, articleProvider))
 	articleGroup.GET("/new", handlers.NewArticleForm(log))
 	articleGroup.POST("/new", handlers.CreateArticle(log, articleSaver, tagProvider))
+	articleGroup.PATCH("/:id", handlers.UpdateArticle(log, articleUpdater, tagProvider))
+	articleGroup.DELETE("/:id", handlers.RemoveArticle(log, articleRemover))
+
+	// problemGroup := r.Group("/problem")
+
 }
 
 func setupMiddleware(r *gin.Engine, log *slog.Logger) {
