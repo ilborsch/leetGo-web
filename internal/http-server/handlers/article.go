@@ -50,12 +50,10 @@ func CreateArticle(
 		_, isPublished := c.GetPostForm("isPublished")
 		tagsNames := strings.Split(c.PostForm("tagsNames"), " ")
 
-		tags := make([]models.Tag, 0, len(tagsNames))
-		for _, tagName := range tagsNames {
-			tag, err := tagProvider.TagByName(c, tagName)
-			if err == nil {
-				tags = append(tags, tag)
-			}
+		tags, err := tagProvider.TagsByNames(c, tagsNames)
+		if err != nil {
+			log.Info("invalid request form")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
 		}
 
 		article := models.ArticleRaw(title, content, authorID, isPublished, tags)
@@ -64,6 +62,7 @@ func CreateArticle(
 			log.Info("invalid request form")
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
 		}
+
 		log.Info(fmt.Sprintf("created a new article with id %v", id))
 		templates.ArticleSuccessResponse(c, article)
 	}
@@ -72,5 +71,42 @@ func CreateArticle(
 func NewArticleForm(log *slog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		templates.RespondWithNewArticleForm(c)
+	}
+}
+
+func UpdateArticle(
+	log *slog.Logger,
+	articleUpdater models.ArticleUpdater,
+	tagProvider models.TagProvider,
+) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// implement middleware to check if auth token is valid
+		// authorID, _ := c.Get("userID")
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			log.Info("non-parsable article id provided: " + c.Param("id"))
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+		}
+		authorID := uint(1)
+		title := c.PostForm("title")
+		content := []byte(c.PostForm("content"))
+		_, isPublished := c.GetPostForm("isPublished")
+		tagsNames := strings.Split(c.PostForm("tagsNames"), " ")
+
+		tags, err := tagProvider.TagsByNames(c, tagsNames)
+		if err != nil {
+			log.Info("invalid request form")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
+		}
+
+		article := models.ArticleRaw(title, content, authorID, isPublished, tags)
+		err = articleUpdater.UpdateArticle(c, uint(id), article)
+		if err != nil {
+			log.Info("invalid request form")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
+		}
+
+		log.Info(fmt.Sprintf("updated article with id %v successfully", id))
+		templates.ArticleSuccessResponse(c, article)
 	}
 }

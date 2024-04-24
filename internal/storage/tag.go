@@ -19,16 +19,32 @@ func (s *Storage) Tag(ctx context.Context, id int) (models.Tag, error) {
 	return tag, nil
 }
 
-func (s *Storage) TagByName(ctx context.Context, name string) (models.Tag, error) {
-	var tag models.Tag
-	result := s.db.Where("name = ?", name).First(&tag)
+func (s *Storage) TagsByNames(ctx context.Context, names []string) ([]models.Tag, error) {
+	var tags []models.Tag
+	result := s.db.Where("name IN ?", names).Find(&tags)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return models.Tag{}, nil
+			return nil, nil
 		}
-		return models.Tag{}, result.Error
+		return nil, result.Error
 	}
-	return tag, nil
+	return tags, nil
+}
+
+func (s *Storage) ArticleTags(ctx context.Context, articleID uint) ([]models.Tag, error) {
+	var article models.Article
+	if result := s.db.Preload("Tags").First(&article, articleID); result.Error != nil {
+		return nil, result.Error
+	}
+	return article.Tags, nil
+}
+
+func (s *Storage) ProblemTags(ctx context.Context, problemID uint) ([]models.Tag, error) {
+	var problem models.Problem
+	if result := s.db.Preload("Tags").First(&problem, problemID); result.Error != nil {
+		return nil, result.Error
+	}
+	return problem.Tags, nil
 }
 
 func (s *Storage) SaveTag(ctx context.Context, new models.Tag) (uint, error) {

@@ -20,5 +20,6 @@ func main() {
 
 	// init router
 	r := router.New(log, db)
+
 	r.Run("0.0.0.0", cfg.Port)
 }

@@ -19,7 +19,9 @@ func TagRaw(name string) Tag {
 
 type TagProvider interface {
 	Tag(ctx context.Context, id int) (Tag, error)
-	TagByName(ctx context.Context, name string) (Tag, error)
+	TagsByNames(ctx context.Context, names []string) ([]Tag, error)
+	ArticleTags(ctx context.Context, articleID uint) ([]Tag, error)
+	ProblemTags(ctx context.Context, problemID uint) ([]Tag, error)
 }
 
 type TagSaver interface {
