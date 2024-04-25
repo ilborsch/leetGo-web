@@ -33,10 +33,11 @@ type ProblemProvider interface {
 	Problem(ctx context.Context, id uint) (Problem, error)
 	ProblemByTitle(ctx context.Context, title string) (Problem, error)
 	ProblemsByFilters(ctx context.Context, difficulty *string, tags []Tag) ([]Problem, error)
+	Problems(ctx context.Context) ([]Problem, error)
 }
 
 type ProblemSaver interface {
-	Save(ctx context.Context, new Problem) (uint, error)
+	SaveProblem(ctx context.Context, new Problem) (uint, error)
 }
 
 type ProblemRemover interface {

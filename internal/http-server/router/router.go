@@ -28,8 +28,8 @@ func New(log *slog.Logger, storage *storage.Storage) *Router {
 	engine.SetHTMLTemplate(template.Must(template.ParseFiles("static/html/*.html")))
 
 	setupMiddleware(engine, log)
-	// sorry about that :)
-	setupRoutes(engine, log, storage, storage, storage, storage, storage)
+	// i am very sorry about that :)
+	setupRoutes(engine, log, storage, storage, storage, storage, storage, storage, storage, storage, storage, storage)
 	return &Router{
 		log:    log,
 		engine: engine,
@@ -43,20 +43,33 @@ func setupRoutes(
 	articleSaver models.ArticleSaver,
 	articleUpdater models.ArticleUpdater,
 	articleRemover models.ArticleRemover,
+	problemProvider models.ProblemProvider,
+	problemSaver models.ProblemSaver,
+	problemRemover models.ProblemRemover,
 	tagProvider models.TagProvider,
-
+	tagSaver models.TagSaver,
+	tagRemover models.TagRemover,
 ) {
 	r.GET("/", handlers.Index)
 
 	articleGroup := r.Group("/article")
 	articleGroup.GET("/:id", handlers.ArticleByID(log, articleProvider))
-	articleGroup.GET("/new", handlers.NewArticleForm(log))
+	articleGroup.GET("/new", handlers.NewArticleForm())
 	articleGroup.POST("/new", handlers.CreateArticle(log, articleSaver, tagProvider))
 	articleGroup.PATCH("/:id", handlers.UpdateArticle(log, articleUpdater, tagProvider))
 	articleGroup.DELETE("/:id", handlers.RemoveArticle(log, articleRemover))
 
-	// problemGroup := r.Group("/problem")
+	problemGroup := r.Group("/problem")
+	problemGroup.GET("/:id", handlers.ProblemByID(log, problemProvider))
+	problemGroup.GET("/", handlers.ProblemsList(log, problemProvider, tagProvider))
+	problemGroup.GET("/new", handlers.NewProblemForm())
+	problemGroup.POST("/new", handlers.CreateProblem(log, problemSaver, tagProvider))
+	problemGroup.DELETE("/:id", handlers.RemoveProblem(log, problemRemover))
 
+	tagGroup := r.Group("/problem")
+	tagGroup.GET("/new", handlers.NewTagForm())
+	tagGroup.POST("/new", handlers.CreateTag(log, tagSaver))
+	tagGroup.DELETE("/:id", handlers.RemoveTag(log, tagRemover))
 }
 
 func setupMiddleware(r *gin.Engine, log *slog.Logger) {

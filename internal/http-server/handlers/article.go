@@ -73,7 +73,7 @@ func CreateArticle(
 	}
 }
 
-func NewArticleForm(log *slog.Logger) gin.HandlerFunc {
+func NewArticleForm() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		templates.NewArticleFormResponse(c)
 	}

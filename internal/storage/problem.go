@@ -54,7 +54,18 @@ func (s *Storage) ProblemsByFilters(ctx context.Context, difficulty *string, tag
 	return problems, nil
 }
 
-func (s *Storage) Save(ctx context.Context, new models.Problem) (uint, error) {
+func (s *Storage) Problems(ctx context.Context) ([]models.Problem, error) {
+	var problems []models.Problem
+	if result := s.db.Find(&problems); result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+	return problems, nil
+}
+
+func (s *Storage) SaveProblem(ctx context.Context, new models.Problem) (uint, error) {
 	if err := s.db.Create(&new).Error; err != nil {
 		return 0, err
 	}
