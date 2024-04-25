@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	ProblemDifficultyEasy   = "easy"
-	ProblemDifficultyMedium = "medium"
-	ProblemDifficultyHard   = "hard"
+	ProblemDifficultyEasy   = "Easy"
+	ProblemDifficultyMedium = "Medium"
+	ProblemDifficultyHard   = "Hard"
 )
 
 type Problem struct {

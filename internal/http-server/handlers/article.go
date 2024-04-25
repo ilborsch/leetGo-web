@@ -50,7 +50,7 @@ func CreateArticle(
 		authorID := uint(1)
 		title := c.PostForm("title")
 		content := []byte(c.PostForm("content"))
-		_, isPublished := c.GetPostForm("isPublished")
+		isPublished := c.PostForm("isPublished") == "on"
 		tagsNames := strings.Split(c.PostForm("tagsNames"), " ")
 
 		tags, err := tagProvider.TagsByNames(c, tagsNames)

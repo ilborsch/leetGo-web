@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        .problem {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .tag {
+            padding: 5px 10px;
+            background-color: #efefef;
+            border-radius: 4px;
+            margin-right: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="problem">
+        <h1>{{.Title}}</h1>
+        <p><strong>Description:</strong> {{printf "%s" .Description}}</p>
+        <p><strong>Difficulty:</strong> {{.Difficulty}}</p>
+        <div><strong>Tags:</strong>
+            {{range .Tags}}
+            <span class="tag">{{.Name}}</span>
+            {{else}}
+            No tags found
+            {{end}}
+        </div>
+    </div>
+</div>
+</body>
+</html>
