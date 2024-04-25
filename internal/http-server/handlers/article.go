@@ -51,7 +51,7 @@ func CreateArticle(
 		title := c.PostForm("title")
 		content := []byte(c.PostForm("content"))
 		isPublished := c.PostForm("isPublished") == "on"
-		tagsNames := strings.Split(c.PostForm("tagsNames"), " ")
+		tagsNames := strings.Split(c.PostForm("tagsNames"), ", ")
 
 		tags, err := tagProvider.TagsByNames(c, tagsNames)
 		if err != nil {
@@ -79,6 +79,52 @@ func NewArticleForm() gin.HandlerFunc {
 	}
 }
 
+func UpdateArticleForm(log *slog.Logger, articleProvider models.ArticleProvider) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			log.Info("non-parsable article id provided: " + c.Param("id"))
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
+		}
+		article, err := articleProvider.Article(c, uint(id))
+		if err != nil {
+			log.Info("error retrieving article from db")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
+		}
+		if article.ID == 0 {
+			log.Info("invalid article id provided")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
+		}
+		templates.UpdateArticleFormResponse(c, article)
+	}
+}
+
+func RemoveArticleForm(log *slog.Logger, articleProvider models.ArticleProvider) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			log.Info("non-parsable article id provided: " + c.Param("id"))
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
+		}
+		article, err := articleProvider.Article(c, uint(id))
+		if err != nil {
+			log.Info("error retrieving article from db")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
+		}
+		if article.ID == 0 {
+			log.Info("invalid article id provided")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article ID provided.")
+			return
+		}
+		templates.RemoveArticleFormResponse(c, article)
+	}
+}
+
 func UpdateArticle(
 	log *slog.Logger,
 	articleUpdater models.ArticleUpdater,
@@ -97,7 +143,7 @@ func UpdateArticle(
 		title := c.PostForm("title")
 		content := []byte(c.PostForm("content"))
 		_, isPublished := c.GetPostForm("isPublished")
-		tagsNames := strings.Split(c.PostForm("tagsNames"), " ")
+		tagsNames := strings.Split(c.PostForm("tagsNames"), ", ")
 
 		tags, err := tagProvider.TagsByNames(c, tagsNames)
 		if err != nil {

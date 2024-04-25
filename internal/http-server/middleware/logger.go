@@ -7,9 +7,7 @@ import (
 
 func Logger(log *slog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("log", log)
 		c.Next()
-
 		method := c.Request.Method
 		url := c.Request.URL.String()
 		statusCode := c.Writer.Status()
@@ -18,6 +16,6 @@ func Logger(log *slog.Logger) gin.HandlerFunc {
 			slog.String("path", url),
 			slog.Int("statusCode", statusCode),
 		)
-		log.Info("user request")
+		log.Info("request")
 	}
 }

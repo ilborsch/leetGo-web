@@ -81,10 +81,12 @@ func setupRoutes(
 
 	articleGroup := r.Group("/articles")
 	articleGroup.GET("/:id", handlers.ArticleByID(log, articleProvider))
-	articleGroup.GET("/new", handlers.NewArticleForm())
 	articleGroup.POST("/new", handlers.CreateArticle(log, articleSaver, tagProvider))
 	articleGroup.PATCH("/:id", handlers.UpdateArticle(log, articleUpdater, tagProvider))
 	articleGroup.DELETE("/:id", handlers.RemoveArticle(log, articleRemover))
+	articleGroup.GET("/new", handlers.NewArticleForm())
+	articleGroup.GET("/update/:id", handlers.UpdateArticleForm(log, articleProvider))
+	articleGroup.GET("/remove/:id", handlers.RemoveArticleForm(log, articleProvider))
 
 	problemGroup := r.Group("/problems")
 	problemGroup.GET("/:id", handlers.ProblemByID(log, problemProvider))
