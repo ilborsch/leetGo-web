@@ -52,21 +52,21 @@ func setupRoutes(
 ) {
 	r.GET("/", handlers.Index)
 
-	articleGroup := r.Group("/article")
+	articleGroup := r.Group("/articles")
 	articleGroup.GET("/:id", handlers.ArticleByID(log, articleProvider))
 	articleGroup.GET("/new", handlers.NewArticleForm())
 	articleGroup.POST("/new", handlers.CreateArticle(log, articleSaver, tagProvider))
 	articleGroup.PATCH("/:id", handlers.UpdateArticle(log, articleUpdater, tagProvider))
 	articleGroup.DELETE("/:id", handlers.RemoveArticle(log, articleRemover))
 
-	problemGroup := r.Group("/problem")
+	problemGroup := r.Group("/problems")
 	problemGroup.GET("/:id", handlers.ProblemByID(log, problemProvider))
 	problemGroup.GET("/", handlers.ProblemsList(log, problemProvider, tagProvider))
 	problemGroup.GET("/new", handlers.NewProblemForm())
 	problemGroup.POST("/new", handlers.CreateProblem(log, problemSaver, tagProvider))
 	problemGroup.DELETE("/:id", handlers.RemoveProblem(log, problemRemover))
 
-	tagGroup := r.Group("/problem")
+	tagGroup := r.Group("/tags")
 	tagGroup.GET("/new", handlers.NewTagForm())
 	tagGroup.POST("/new", handlers.CreateTag(log, tagSaver))
 	tagGroup.DELETE("/:id", handlers.RemoveTag(log, tagRemover))

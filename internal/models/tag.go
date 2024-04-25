@@ -7,9 +7,9 @@ import (
 
 type Tag struct {
 	gorm.Model
-	Name     string    `storage:"not null;unique;"`
-	Articles []Article `storage:"many2many:article_tags;"`
-	Problems []Problem `storage:"many2many:problem_tags;"`
+	Name     string    `gorm:"not null;unique"`
+	Articles []Article `gorm:"many2many:article_tags;association_foreignkey:ID;foreignkey:ID"`
+	Problems []Problem `gorm:"many2many:problem_tags;association_foreignkey:ID;foreignkey:ID"`
 }
 
 // TagRaw used to initialize tag object which will be later used for create/update operations

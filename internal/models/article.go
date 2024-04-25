@@ -9,11 +9,11 @@ import (
 type Article struct {
 	gorm.Model
 	Title       string
-	Content     []byte `storage:"type:blob"`
+	Content     []byte `gorm:"type:blob"`
 	AuthorID    uint   `gorm:"column:author_id"`
 	IsPublished bool
 	PublishDate time.Time
-	Tags        []Tag `storage:"many2many:article_tags;"`
+	Tags        []Tag `gorm:"many2many:article_tags;association_foreignkey:ID;foreignkey:ID"`
 }
 
 // ArticleRaw used to initialize article object which will be later used for create/update operations

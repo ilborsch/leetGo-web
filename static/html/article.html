@@ -2,9 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Article</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .article {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .title {
+            font-size: 24px;
+            color: #333;
+        }
+        .content {
+            white-space: pre-wrap; /* Maintains whitespace formatting of content */
+        }
+        .tag {
+            padding: 5px 10px;
+            background-color: #efefef;
+            border-radius: 4px;
+            margin-right: 5px;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
+<div class="container">
+    <div class="article">
+        <div class="title">Title: {{.Title}}</div>
+        <div>Author ID: {{.AuthorID}}</div>
+        <div>Published: {{if .IsPublished}}Yes{{else}}No{{end}}</div>
+        <div>Publish Date: {{.PublishDate.Format "Jan 02, 2006"}}</div>
+        <div class="content">Content: {{printf "%s" .Content}}</div>
+        <div>Tags:
+            {{range .Tags}}
+            <span class="tag">{{.Name}}</span>
+            {{else}}
+            No tags
+            {{end}}
+        </div>
+    </div>
+</div>
 </body>
 </html>
