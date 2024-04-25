@@ -6,10 +6,10 @@ import (
 
 type User struct {
 	// uid is fetched from sso microservice therefore is not auto-incrementing
-	UID            uint   `storage:"primaryKey;autoIncrement:false"`
-	Username       string `storage:"not null;unique_index"`
+	UID            uint   `gorm:"primaryKey;autoIncrement:false"`
+	Username       string `gorm:"not null;unique_index"`
 	ProblemsSolved uint
-	Articles       []Article
+	Articles       []Article `gorm:"foreignkey:AuthorID"`
 }
 
 type UserProvider interface {

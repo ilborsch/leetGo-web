@@ -9,6 +9,9 @@ import (
 	"github.com/ilborsch/leetGo-web/internal/storage"
 	"html/template"
 	"log/slog"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 type Router struct {
@@ -25,15 +28,39 @@ func (r *Router) Run(address string, port int) {
 
 func New(log *slog.Logger, storage *storage.Storage) *Router {
 	engine := gin.New()
-	engine.SetHTMLTemplate(template.Must(template.ParseFiles("static/html/*.html")))
-
+	setupHTMLTemplates(engine)
 	setupMiddleware(engine, log)
-	// i am very sorry about that :)
+	// I am very sorry about that :)
 	setupRoutes(engine, log, storage, storage, storage, storage, storage, storage, storage, storage, storage, storage)
 	return &Router{
 		log:    log,
 		engine: engine,
 	}
+}
+
+func setupHTMLTemplates(engine *gin.Engine) {
+	const directoryName = "static/html"
+	tmpl := template.New("")
+	files, err := os.ReadDir(directoryName)
+	if err != nil {
+		panic(fmt.Sprintf("couldn't read template files from ./%s directory", directoryName))
+	}
+	for _, file := range files {
+		if !strings.HasSuffix(file.Name(), ".html") {
+			continue
+		}
+		filePath := filepath.Join(directoryName, file.Name())
+		_, err := tmpl.ParseFiles(filePath)
+		if err != nil {
+			panic(fmt.Sprintf("couldn't parse template file ./%s", filePath))
+		}
+	}
+	engine.SetHTMLTemplate(tmpl)
+}
+
+func setupMiddleware(r *gin.Engine, log *slog.Logger) {
+	r.Use(middleware.Logger(log))
+	r.Use(gin.Recovery())
 }
 
 func setupRoutes(
@@ -70,9 +97,4 @@ func setupRoutes(
 	tagGroup.GET("/new", handlers.NewTagForm())
 	tagGroup.POST("/new", handlers.CreateTag(log, tagSaver))
 	tagGroup.DELETE("/:id", handlers.RemoveTag(log, tagRemover))
-}
-
-func setupMiddleware(r *gin.Engine, log *slog.Logger) {
-	r.Use(middleware.Logger(log))
-	r.Use(gin.Recovery())
 }

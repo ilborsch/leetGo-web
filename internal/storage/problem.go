@@ -10,7 +10,7 @@ import (
 
 func (s *Storage) Problem(ctx context.Context, id uint) (models.Problem, error) {
 	var problem models.Problem
-	result := s.db.First(&problem, id)
+	result := s.db.Preload("Tags").First(&problem, id)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return models.Problem{}, nil
@@ -22,7 +22,7 @@ func (s *Storage) Problem(ctx context.Context, id uint) (models.Problem, error) 
 
 func (s *Storage) ProblemByTitle(ctx context.Context, title string) (models.Problem, error) {
 	var problem models.Problem
-	result := s.db.Where("title = ?", title).First(&problem)
+	result := s.db.Preload("Tags").Where("title = ?", title).First(&problem)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return models.Problem{}, nil
@@ -38,7 +38,7 @@ func (s *Storage) ProblemsByFilters(ctx context.Context, difficulty *string, tag
 		return nil, errors.New("invalid filters: both difficulty and tags are empty")
 	}
 
-	query := s.db.Model(&models.Problem{})
+	query := s.db.Preload("Tags").Model(&models.Problem{})
 	if difficulty != nil {
 		query = query.Where("difficulty = ?", *difficulty)
 	}
@@ -56,7 +56,7 @@ func (s *Storage) ProblemsByFilters(ctx context.Context, difficulty *string, tag
 
 func (s *Storage) Problems(ctx context.Context) ([]models.Problem, error) {
 	var problems []models.Problem
-	if result := s.db.Find(&problems); result.Error != nil {
+	if result := s.db.Preload("Tags").Find(&problems); result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}

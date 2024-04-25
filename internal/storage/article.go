@@ -10,7 +10,7 @@ import (
 
 func (s *Storage) Article(ctx context.Context, id uint) (models.Article, error) {
 	var article models.Article
-	result := s.db.First(&article, id)
+	result := s.db.Preload("Tags").First(&article, id)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return models.Article{}, nil
@@ -22,7 +22,7 @@ func (s *Storage) Article(ctx context.Context, id uint) (models.Article, error) 
 
 func (s *Storage) ArticlesByAuthor(ctx context.Context, authorID uint) ([]models.Article, error) {
 	var articles []models.Article
-	result := s.db.Where("author_id = ?", authorID).Find(&articles)
+	result := s.db.Preload("Tags").Where("author_id = ?", authorID).Find(&articles)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -36,7 +36,8 @@ func (s *Storage) ArticlesByTags(ctx context.Context, tags []models.Tag) ([]mode
 	var articles []models.Article
 	tagNames := utils.GetTagNames(tags)
 	// Query using JOIN to filter articles by multiple tags
-	result := s.db.Select("id, title, content, author_id, is_published, publish_date").
+	result := s.db.Preload("Tags").
+		Select("id, title, content, author_id, is_published, publish_date").
 		Joins("JOIN article_tags ON articles.id = article_tags.article_id").
 		Joins("JOIN tags ON tags.id = article_tags.tag_id").
 		Where("tags.name IN ?", tagNames).
