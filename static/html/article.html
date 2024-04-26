@@ -37,6 +37,8 @@
 <body>
 <div class="container">
     <div class="article">
+        <div class="title"><a href="/articles/update/{{.ID}}">Edit</a></div>
+        <div class="title"><a href="/articles/remove/{{.ID}}">Remove</a></div>
         <div class="title">Title: {{.Title}}</div>
         <div>Author ID: {{.AuthorID}}</div>
         <div>Published: {{if .IsPublished}}Yes{{else}}No{{end}}</div>

@@ -11,6 +11,43 @@ import (
 	"strings"
 )
 
+func Articles(
+	log *slog.Logger,
+	articleProvider models.ArticleProvider,
+	tagProvider models.TagProvider,
+) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tagsNames := c.QueryArray("tags")
+
+		tags, err := tagProvider.TagsByNames(c, tagsNames)
+		if err != nil {
+			log.Info("invalid request query parameters")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid form. Please, try again.")
+			return
+		}
+
+		var articles []models.Article
+		if len(tags) == 0 {
+			articles, err = articleProvider.Articles(c)
+		} else {
+			articles, err = articleProvider.ArticlesByTags(c, tags)
+		}
+
+		if err != nil {
+			log.Error("error retrieving the article from db")
+			templates.RespondWithError(c, http.StatusInternalServerError, "Internal server error. Sorry.")
+			return
+		}
+		if articles == nil {
+			log.Info("invalid article filters provided")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid article filters provided.")
+			return
+		}
+		log.Info("getting problems list")
+		templates.ArticlesResponse(c, articles, tags)
+	}
+}
+
 func ArticleByID(
 	log *slog.Logger,
 	articleProvider models.ArticleProvider,

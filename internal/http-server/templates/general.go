@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	ErrorTemplateName = "error.html"
-	HomePageTemplateName
+	ErrorTemplateName    = "error.html"
+	HomePageTemplateName = "home.html"
 )
 
 func RespondWithError(c *gin.Context, code int, error string) {

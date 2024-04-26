@@ -32,6 +32,17 @@ func (s *Storage) ArticlesByAuthor(ctx context.Context, authorID uint) ([]models
 	return articles, nil
 }
 
+func (s *Storage) Articles(ctx context.Context) ([]models.Article, error) {
+	var articles []models.Article
+	if result := s.db.Preload("Tags").Find(&articles); result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+	return articles, nil
+}
+
 func (s *Storage) ArticlesByTags(ctx context.Context, tags []models.Tag) ([]models.Article, error) {
 	var articles []models.Article
 	tagNames := utils.GetTagNames(tags)

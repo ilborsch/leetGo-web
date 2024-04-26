@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .article {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .tag {
+            display: inline-block;
+            margin: 2px;
+            padding: 2px 5px;
+            background: #eef;
+            color: #555;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Articles</h1>
+<div>
+    {{range .Articles}}
+    <div class="article">
+        <h2><a href="/articles/{{.ID}}">{{.Title}}</a></h2>
+        <p>{{printf "%s" .Content}}</p>
+        <div>Author ID: {{.AuthorID}}</div>
+        <div>Publish Date: {{.PublishDate.Format "2006-01-02"}}</div>
+        <div>Published: {{if .IsPublished}}Yes{{else}}No{{end}}</div>
+        <div>Tags:
+            {{range .Tags}}
+            <span class="tag">{{.Name}}</span>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+</div>
+</body>
+</html>

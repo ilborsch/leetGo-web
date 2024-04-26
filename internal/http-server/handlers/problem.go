@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func ProblemsList(
+func Problems(
 	log *slog.Logger,
 	problemProvider models.ProblemProvider,
 	tagProvider models.TagProvider,
@@ -28,7 +28,7 @@ func ProblemsList(
 		}
 
 		var problems []models.Problem
-		if difficulty == "" && tags == nil {
+		if difficulty == "" && len(tags) == 0 {
 			problems, err = problemProvider.Problems(c)
 		} else {
 			problems, err = problemProvider.ProblemsByFilters(c, &difficulty, tags)

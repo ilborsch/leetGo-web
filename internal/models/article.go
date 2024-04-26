@@ -36,6 +36,7 @@ type ArticleProvider interface {
 	Article(ctx context.Context, id uint) (Article, error)
 	ArticlesByAuthor(ctx context.Context, authorID uint) ([]Article, error)
 	ArticlesByTags(ctx context.Context, tags []Tag) ([]Article, error)
+	Articles(ctx context.Context) ([]Article, error)
 }
 
 type ArticleSaver interface {

@@ -14,6 +14,7 @@ const (
 	RemoveArticleTemplateName     = "remove_article.html"
 	UpdateArticleFormTemplateName = "update_article_form.html"
 	RemoveArticleFormTemplateName = "remove_article_form.html"
+	GetArticlesTemplateName       = "articles.html"
 )
 
 func ArticleResponse(c *gin.Context, article models.Article) {
@@ -42,4 +43,10 @@ func RemoveArticleResponse(c *gin.Context) {
 
 func RemoveArticleFormResponse(c *gin.Context, article models.Article) {
 	c.HTML(http.StatusOK, RemoveArticleFormTemplateName, article)
+}
+
+func ArticlesResponse(c *gin.Context, articles []models.Article, tags []models.Tag) {
+	c.HTML(http.StatusOK, GetArticlesTemplateName, gin.H{
+		"Articles": articles,
+	})
 }

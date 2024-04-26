@@ -80,6 +80,7 @@ func setupRoutes(
 	r.GET("/", handlers.Home(log))
 
 	articleGroup := r.Group("/articles")
+	articleGroup.GET("/", handlers.Articles(log, articleProvider, tagProvider))
 	articleGroup.GET("/:id", handlers.ArticleByID(log, articleProvider))
 	articleGroup.POST("/new", handlers.CreateArticle(log, articleSaver, tagProvider))
 	articleGroup.PATCH("/:id", handlers.UpdateArticle(log, articleUpdater, tagProvider))
@@ -89,8 +90,8 @@ func setupRoutes(
 	articleGroup.GET("/remove/:id", handlers.RemoveArticleForm(log, articleProvider))
 
 	problemGroup := r.Group("/problems")
+	problemGroup.GET("/", handlers.Problems(log, problemProvider, tagProvider))
 	problemGroup.GET("/:id", handlers.ProblemByID(log, problemProvider))
-	problemGroup.GET("/", handlers.ProblemsList(log, problemProvider, tagProvider))
 	problemGroup.GET("/new", handlers.NewProblemForm())
 	problemGroup.POST("/new", handlers.CreateProblem(log, problemSaver, tagProvider))
 	problemGroup.GET("/remove/:id", handlers.RemoveProblemForm(log, problemProvider))
