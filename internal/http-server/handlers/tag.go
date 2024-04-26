@@ -48,3 +48,26 @@ func RemoveTag(log *slog.Logger, tagRemover models.TagRemover) gin.HandlerFunc {
 		templates.RemoveTagResponse(c)
 	}
 }
+
+func RemoveTagForm(log *slog.Logger, tagProvider models.TagProvider) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			log.Info("non-parsable tag id provided: " + c.Param("id"))
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid tag ID provided.")
+			return
+		}
+		tag, err := tagProvider.Tag(c, id)
+		if err != nil {
+			log.Info("error retrieving tag from db")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid tag ID provided.")
+			return
+		}
+		if tag.ID == 0 {
+			log.Info("invalid tag id provided")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid tag ID provided.")
+			return
+		}
+		templates.RemoveTagFormResponse(c, tag)
+	}
+}

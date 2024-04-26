@@ -77,7 +77,7 @@ func setupRoutes(
 	tagSaver models.TagSaver,
 	tagRemover models.TagRemover,
 ) {
-	r.GET("/", handlers.Index)
+	r.GET("/", handlers.Home(log))
 
 	articleGroup := r.Group("/articles")
 	articleGroup.GET("/:id", handlers.ArticleByID(log, articleProvider))
@@ -93,10 +93,12 @@ func setupRoutes(
 	problemGroup.GET("/", handlers.ProblemsList(log, problemProvider, tagProvider))
 	problemGroup.GET("/new", handlers.NewProblemForm())
 	problemGroup.POST("/new", handlers.CreateProblem(log, problemSaver, tagProvider))
+	problemGroup.GET("/remove/:id", handlers.RemoveProblemForm(log, problemProvider))
 	problemGroup.DELETE("/:id", handlers.RemoveProblem(log, problemRemover))
 
 	tagGroup := r.Group("/tags")
 	tagGroup.GET("/new", handlers.NewTagForm())
 	tagGroup.POST("/new", handlers.CreateTag(log, tagSaver))
+	tagGroup.GET("/remove/:id", handlers.RemoveTagForm(log, tagProvider))
 	tagGroup.DELETE("/:id", handlers.RemoveTag(log, tagRemover))
 }

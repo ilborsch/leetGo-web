@@ -1,0 +1,44 @@
+<!-- Template for displaying problems, their difficulty, and tags -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .problem {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .tag {
+            display: inline-block;
+            margin: 2px;
+            padding: 2px 5px;
+            background: #eef;
+            color: #555;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Problems - Difficulty: {{.Difficulty}}</h1>
+<div>
+    {{range .Problems}}
+    <div class="problem">
+        <h2><a class="tag" href="/problems/{{.ID}}">{{.Title}}</a></h2>
+        <p>{{printf "%s" .Description}}</p>
+        <div>Difficulty: {{.Difficulty}}</div>
+        <div>Tags:
+            {{range .Tags}}
+            <span class="tag">{{.Name}}</span>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+</div>
+</body>
+</html>

@@ -7,9 +7,10 @@ import (
 )
 
 const (
-	NewTagFormTemplateName = "new_tag_form.html"
-	CreateTagTemplateName  = "create_tag.html"
-	RemoveTagTemplateName  = "remove_tag.html"
+	NewTagFormTemplateName    = "new_tag_form.html"
+	CreateTagTemplateName     = "create_tag.html"
+	RemoveTagTemplateName     = "remove_tag.html"
+	RemoveTagFormTemplateName = "remove_tag_form.html"
 )
 
 func NewTagFormResponse(c *gin.Context) {
@@ -22,4 +23,8 @@ func CreateTagResponse(c *gin.Context, tag models.Tag) {
 
 func RemoveTagResponse(c *gin.Context) {
 	c.HTML(http.StatusOK, RemoveTagTemplateName, gin.H{})
+}
+
+func RemoveTagFormResponse(c *gin.Context, tag models.Tag) {
+	c.HTML(http.StatusOK, RemoveTagFormTemplateName, tag)
 }

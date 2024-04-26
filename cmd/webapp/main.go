@@ -8,13 +8,12 @@ import (
 )
 
 func main() {
-	// TODO: validators for handlers
+	// TODO: Frontend
+	// TODO: blocks in html to reuse code
 	// TODO: sso grpc client
 	// TODO: Implement users
-	// TODO: Selenium testing
 	// TODO: execution-engine client
-	// TODO: Frontend
-	// TODO: Middleware to validate jwt tokens
+	// TODO: Selenium testing
 
 	// init config
 	cfg := config.MustLoad()

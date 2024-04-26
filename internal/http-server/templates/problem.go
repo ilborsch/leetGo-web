@@ -7,11 +7,12 @@ import (
 )
 
 const (
-	GetProblemTemplateName     = "problem.html"
-	GetProblemsTemplateName    = "problems.html"
-	CreateProblemTemplateName  = "create_problem.html"
-	NewProblemFormTemplateName = "new_problem_form.html"
-	RemoveProblemTemplateName  = "remove_problem.html"
+	GetProblemTemplateName        = "problem.html"
+	GetProblemsTemplateName       = "problems.html"
+	CreateProblemTemplateName     = "create_problem.html"
+	NewProblemFormTemplateName    = "new_problem_form.html"
+	RemoveProblemTemplateName     = "remove_problem.html"
+	RemoveProblemFormTemplateName = "remove_problem_form.html"
 )
 
 func ProblemsResponse(c *gin.Context, problems []models.Problem, difficulty string, tags []models.Tag) {
@@ -36,4 +37,8 @@ func NewProblemFormResponse(c *gin.Context) {
 
 func RemoveProblemResponse(c *gin.Context) {
 	c.HTML(http.StatusOK, RemoveProblemTemplateName, gin.H{})
+}
+
+func RemoveProblemFormResponse(c *gin.Context, problem models.Problem) {
+	c.HTML(http.StatusOK, RemoveProblemFormTemplateName, problem)
 }

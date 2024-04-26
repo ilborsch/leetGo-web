@@ -44,6 +44,7 @@ func ProblemsList(
 			templates.RespondWithError(c, http.StatusBadRequest, "Invalid problem filters provided.")
 			return
 		}
+		log.Info("getting problems list")
 		templates.ProblemsResponse(c, problems, difficulty, tags)
 	}
 }
@@ -132,5 +133,28 @@ func RemoveProblem(
 
 		log.Info(fmt.Sprintf("removed problem with id %v successfully", id))
 		templates.RemoveProblemResponse(c)
+	}
+}
+
+func RemoveProblemForm(log *slog.Logger, problemProvider models.ProblemProvider) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			log.Info("non-parsable problem id provided: " + c.Param("id"))
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid problem ID provided.")
+			return
+		}
+		problem, err := problemProvider.Problem(c, uint(id))
+		if err != nil {
+			log.Info("error retrieving problem from db")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid problem ID provided.")
+			return
+		}
+		if problem.ID == 0 {
+			log.Info("invalid problem id provided")
+			templates.RespondWithError(c, http.StatusBadRequest, "Invalid problem ID provided.")
+			return
+		}
+		templates.RemoveProblemFormResponse(c, problem)
 	}
 }
