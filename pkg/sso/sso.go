@@ -15,7 +15,7 @@ type Client struct {
 	appID int
 }
 
-func (c *Client) NewClient(log *slog.Logger, host string, port, appID int) *Client {
+func NewClient(log *slog.Logger, host string, port, appID int) *Client {
 	address := fmt.Sprintf("%s:%v", host, port)
 	conn := mustListen(address)
 	client := ssov1.NewAuthClient(conn)

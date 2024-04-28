@@ -8,8 +8,14 @@ import (
 )
 
 type Config struct {
-	Env  string `yaml:"env"`
-	Port int    `yaml:"port"`
+	Env  string    `yaml:"env"`
+	Port int       `yaml:"port"`
+	SSO  SSOConfig `yaml:"sso"`
+}
+
+type SSOConfig struct {
+	AppID int `yaml:"app_id"`
+	Port  int `yaml:"port"`
 }
 
 func MustLoad() *Config {
