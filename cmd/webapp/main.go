@@ -8,13 +8,6 @@ import (
 )
 
 func main() {
-	// TODO: Frontend
-	// TODO: blocks in html to reuse code
-	// TODO: sso grpc client
-	// TODO: Implement users
-	// TODO: execution-engine client
-	// TODO: Selenium testing
-
 	// init config
 	cfg := config.MustLoad()
 

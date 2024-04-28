@@ -1,2 +1,5 @@
 env: "dev"
 port: 8080
+sso:
+  app_id: 1
+  port: 8082
